@@ -27,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         b1=(Button)findViewById(R.id.button_part1);
+        b2=(Button)findViewById(R.id.button_part2);
 
         tts=new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
             @Override
@@ -61,6 +62,35 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }
                     br.close();
+                }
+                catch (IOException e) {
+                    //You'll need to add proper error handling here
+                    Log.d("ERROR", e.toString());
+                }
+            }
+        });
+
+        b2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String toSpeak = getFile("Part2");
+                if(toSpeak.isEmpty()) return;
+                try {
+                    BufferedReader br = new BufferedReader(new FileReader(toSpeak));
+                    String line = null; StringBuilder sb = new StringBuilder();
+
+                    while ((line = br.readLine()) != null) {
+                        sb.append(line).append("\n");
+                    }
+                    br.close();
+                    String[] text = sb.toString().split("::");
+                    if(text.length > 1) {
+                        Toast.makeText(getApplicationContext(), text[0], Toast.LENGTH_SHORT).show();
+                        tts.speak(text[0], TextToSpeech.QUEUE_ADD, null);
+
+                        Toast.makeText(getApplicationContext(), text[1], Toast.LENGTH_LONG).show();
+                        tts.speak(text[1], TextToSpeech.QUEUE_ADD, null);
+                    }
                 }
                 catch (IOException e) {
                     //You'll need to add proper error handling here
