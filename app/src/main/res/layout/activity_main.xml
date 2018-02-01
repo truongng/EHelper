@@ -36,7 +36,7 @@
         android:text="Part 3" />
 
     <CheckBox
-        android:id="@+id/checkBox"
+        android:id="@+id/checkBox_all"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignStart="@+id/button_part1"
@@ -49,7 +49,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignEnd="@+id/button_part3"
-        android:layout_alignTop="@+id/checkBox"
+        android:layout_alignTop="@+id/checkBox_all"
         android:text="Stop" />
+
+    <CheckBox
+        android:id="@+id/checkBox_repeat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/button_part2"
+        android:layout_alignTop="@+id/checkBox_all"
+        android:text="Repeat" />
 
 </RelativeLayout>

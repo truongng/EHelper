@@ -1,11 +1,16 @@
 apply plugin: 'com.android.application'
 
+/*
+2018-02-01  1.1 Support read each line
+2018-01-30  1.0 Initial version
+*/
+
 android {
-    compileSdkVersion 27
+    compileSdkVersion 26
     defaultConfig {
         applicationId "thksoft.e_helper"
         minSdkVersion 19
-        targetSdkVersion 27
+        targetSdkVersion 26
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
