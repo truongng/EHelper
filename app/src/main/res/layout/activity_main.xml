@@ -30,7 +30,7 @@
                 android:id="@+id/button_part2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_above="@+id/checkBox_all"
+                android:layout_above="@+id/chkRealTest"
                 android:layout_centerHorizontal="true"
                 android:text="Part 2" />
 
@@ -40,33 +40,42 @@
                 android:layout_height="wrap_content"
                 android:layout_alignBaseline="@+id/button_part2"
                 android:layout_alignBottom="@+id/button_part2"
-                android:layout_alignStart="@+id/button_stop"
+                android:layout_alignStart="@+id/button_start"
                 android:text="Part 3" />
 
             <Button
-                android:id="@+id/button_stop"
+                android:id="@+id/button_start"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_alignTop="@+id/checkBox_repeat"
-                android:layout_marginEnd="17dp"
+                android:layout_alignStart="@+id/button_next"
+                android:layout_below="@+id/button_part3"
                 android:text="Stop" />
+
+            <ImageButton
+                android:id="@+id/btnSpeak"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignStart="@+id/randomQ"
+                android:layout_alignTop="@+id/tvAnswerText"
+                android:background="@null"
+                android:src="@drawable/ic_mic_black_48dp"
+                android:visibility="invisible" />
 
             <CheckBox
                 android:id="@+id/checkBox_all"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignStart="@+id/button_part1"
-                android:layout_below="@+id/button_part1"
-                android:layout_marginTop="19dp"
+                android:layout_below="@+id/chkRealTest"
                 android:text="Select All" />
 
             <CheckBox
                 android:id="@+id/cbShowAnswer"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignStart="@+id/tvQuestion"
-                android:layout_below="@+id/checkBox_all"
+                android:layout_alignBaseline="@+id/randomQ"
+                android:layout_alignBottom="@+id/randomQ"
+                android:layout_alignStart="@+id/tvAnswerText"
                 android:text="Show Answer" />
 
             <CheckBox
@@ -74,66 +83,80 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignStart="@+id/button_part2"
-                android:layout_alignTop="@+id/checkBox_all"
+                android:layout_below="@+id/chkRealTest"
                 android:text="Repeat" />
 
             <TextView
-                android:id="@+id/tvQuestion"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignEnd="@+id/button_stop"
-                android:layout_alignStart="@+id/textView"
-                android:layout_below="@+id/textView"
-                android:layout_margin="0dp"
-                android:background="@drawable/back"
-                android:inputType="textMultiLine"
-                android:textSize="18sp" />
-
-            <TextView
-                android:id="@+id/tvAnswer"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignEnd="@+id/tvQuestion"
-                android:layout_alignStart="@+id/textView2"
-                android:layout_below="@+id/textView2"
-                android:background="@drawable/back"
-                android:inputType="textMultiLine"
-                android:textSize="18sp" />
-
-            <TextView
-                android:id="@+id/textView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignStart="@+id/checkBox_all"
-                android:layout_below="@+id/cbShowAnswer"
-                android:layout_marginTop="16dp"
-                android:text="Question:" />
-
-            <TextView
-                android:id="@+id/textView2"
+                android:id="@+id/tvQuestionText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignStart="@+id/tvQuestion"
                 android:layout_below="@+id/tvQuestion"
                 android:layout_marginTop="15dp"
                 android:text="Answer:" />
+            <TextView
+                android:id="@+id/tvQuestion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignEnd="@+id/button_start"
+                android:layout_alignStart="@+id/tvAnswerText"
+                android:layout_below="@+id/tvAnswerText"
+                android:layout_margin="0dp"
+                android:background="@drawable/back"
+                android:inputType="textMultiLine"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/tvAnswerText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignStart="@+id/checkBox_all"
+                android:layout_below="@+id/cbShowAnswer"
+                android:layout_marginTop="16dp"
+                android:text="Question:" />
+            <TextView
+                android:id="@+id/tvAnswer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignEnd="@+id/tvQuestion"
+                android:layout_alignStart="@+id/tvQuestionText"
+                android:layout_below="@+id/tvQuestionText"
+                android:background="@drawable/back"
+                android:inputType="textMultiLine"
+                android:textSize="18sp" />
 
             <CheckBox
                 android:id="@+id/randomQ"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/button_next"
                 android:layout_alignStart="@+id/checkBox_repeat"
-                android:layout_below="@+id/checkBox_repeat"
                 android:text="Random Q" />
 
             <CheckBox
                 android:id="@+id/chkRealTest"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_alignStart="@+id/checkBox_repeat"
                 android:layout_below="@+id/button_part1"
-                android:layout_marginStart="11dp"
-                android:layout_toEndOf="@+id/textView"
                 android:text="TEST" />
+
+            <Button
+                android:id="@+id/button_next"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_below="@+id/button_start"
+                android:layout_marginEnd="20dp"
+                android:text="Next" />
+
+            <CheckBox
+                android:id="@+id/chkPushAll"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/checkBox_repeat"
+                android:layout_alignStart="@+id/button_part1"
+                android:text="Push All" />
         </RelativeLayout>
     </ScrollView>
 </RelativeLayout>
