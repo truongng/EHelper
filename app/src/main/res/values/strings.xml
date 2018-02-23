@@ -1,4 +1,10 @@
 <resources>
+    <string-array name="practice_setcion">
+        <item>Read Aloud</item>
+        <item>Repeat Sentence</item>
+        <item>Answer Short Question</item>
+        <item>Dictation</item>
+    </string-array>
     <string name="app_name">E-Helper</string>
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>

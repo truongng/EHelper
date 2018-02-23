@@ -55,7 +55,7 @@
                 android:id="@+id/btnSpeak"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignStart="@+id/randomQ"
+                android:layout_alignStart="@+id/chkRandomQ"
                 android:layout_alignTop="@+id/tvAnswerText"
                 android:background="@null"
                 android:src="@drawable/ic_mic_black_48dp"
@@ -73,8 +73,8 @@
                 android:id="@+id/cbShowAnswer"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignBaseline="@+id/randomQ"
-                android:layout_alignBottom="@+id/randomQ"
+                android:layout_alignBaseline="@+id/chkRandomQ"
+                android:layout_alignBottom="@+id/chkRandomQ"
                 android:layout_alignStart="@+id/tvAnswerText"
                 android:text="Show Answer" />
 
@@ -126,11 +126,12 @@
                 android:textSize="18sp" />
 
             <CheckBox
-                android:id="@+id/randomQ"
+                android:id="@+id/chkRandomQ"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignBottom="@+id/button_next"
                 android:layout_alignStart="@+id/checkBox_repeat"
+                android:enabled="false"
                 android:text="Random Q" />
 
             <CheckBox

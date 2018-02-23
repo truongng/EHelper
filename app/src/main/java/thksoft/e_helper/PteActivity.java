@@ -11,12 +11,14 @@ import android.speech.tts.UtteranceProgressListener;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,6 +26,7 @@ import android.widget.Toast;
 import com.danikula.videocache.HttpProxyCacheServer;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -36,23 +39,20 @@ public class PteActivity extends AppCompatActivity {
     String[] audioFiles, questions;
     int fileIdx = -1;
     boolean choseRandomly = false;
-    Spinner spinCat;
-    Button bRepeatSentence, bAnswerShortQuestion, bDictation, bStart, bRepeat, bShowQuestion,
-            bShowAnswer, bCheckResult;
+    Spinner spinCat, spinPart;
+    Button bStart, bRepeat, bShowQuestion, bShowAnswer, bCheckResult;
     CheckBox chkChoseRandomly;
     TextView tvQuestion, tvResult;
     EditText etAnswer;
     ProgressDialog progDailog;
     HttpProxyCacheServer proxy;
-
+    ImageButton btnSpeak;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pte);
         spinCat = findViewById(R.id.cbCategory);
-        bRepeatSentence = findViewById(R.id.button_rs);
-        bAnswerShortQuestion = findViewById(R.id.button_asq);
-        bDictation = findViewById(R.id.button_dic);
+        spinPart = findViewById(R.id.cbPart);
         bStart = findViewById(R.id.button_start);
         bRepeat = findViewById(R.id.button_repeat);
         bShowQuestion = findViewById(R.id.button_showQuestion);
@@ -62,6 +62,7 @@ public class PteActivity extends AppCompatActivity {
         tvQuestion = findViewById(R.id.tvQuestion);
         etAnswer = findViewById(R.id.etAnswer);
         tvResult = findViewById(R.id.tvResultText);
+        btnSpeak = findViewById(R.id.btnSpeak);
 
         tts = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
             @Override
@@ -71,7 +72,7 @@ public class PteActivity extends AppCompatActivity {
                         @Override
                         public void onDone(String utteranceId) {
                             Log.d("MainActivity", "TTS finished " + utteranceId);
-                            if (!url.contains("dictation")) promptSpeechInput();
+                            if (!url.contains("dictation")) promptSpeechInput("");
                         }
 
                         @Override
@@ -91,30 +92,36 @@ public class PteActivity extends AppCompatActivity {
             }
         });
 
-        bRepeatSentence.setOnClickListener(new View.OnClickListener() {
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.practice_setcion, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinPart.setAdapter(adapter);
+        spinPart.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onClick(View v) {
-                url = base_url + "/repeatsentence";
-                updateSpiner(url);
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                setTitle("PTE - " + spinPart.getSelectedItem().toString());
                 etAnswer.setEnabled(false);
-            }
-        });
-
-        bAnswerShortQuestion.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                url = base_url + "/answershortquestion";
+                switch (spinPart.getSelectedItemPosition()) {
+                    case 0:
+                        url = base_url + "/readaloud";
+                        break;
+                    case 1:
+                        url = base_url + "/repeatsentence";
+                        break;
+                    case 2:
+                        url = base_url + "/answershortquestion";
+                        break;
+                    case 3:
+                        url = base_url + "/dictation";
+                        etAnswer.setEnabled(true);
+                        break;
+                }
                 updateSpiner(url);
-                etAnswer.setEnabled(false);
             }
-        });
 
-        bDictation.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                url = base_url + "/dictation";
-                updateSpiner(url);
-                etAnswer.setEnabled(true);
+            public void onNothingSelected(AdapterView<?> parentView) {
+
             }
         });
 
@@ -125,7 +132,14 @@ public class PteActivity extends AppCompatActivity {
                     Random r = new Random();
                     fileIdx = r.nextInt(questions.length - 1);
                 } else if (++fileIdx >= questions.length) fileIdx = 0;
-                speakOut();
+                if (spinPart.getSelectedItemPosition() == 0) {
+                    if (questions[fileIdx].contains("http")) {
+                        questions[fileIdx] = Utilities.getFileContent(questions[fileIdx]);
+                    }
+                    promptSpeechInput(questions[fileIdx]);
+                } else {
+                    speakOut();
+                }
             }
         });
 
@@ -133,13 +147,18 @@ public class PteActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (fileIdx < 0 || fileIdx >= questions.length) return;
-                speakOut();
+                if (spinPart.getSelectedItemPosition() == 0) {
+                    promptSpeechInput(questions[fileIdx]);
+                } else {
+                    speakOut();
+                }
             }
         });
 
         bShowQuestion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (fileIdx < 0 || fileIdx >= questions.length) return;
                 tvQuestion.setText(questions[fileIdx].split("-")[0].trim());
             }
         });
@@ -147,6 +166,7 @@ public class PteActivity extends AppCompatActivity {
         bShowAnswer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (fileIdx < 0 || fileIdx >= questions.length) return;
                 String answer = questions[fileIdx];
                 if (url.contains("answershortquestion")) {
                     String[] tmp = answer.split("-");
@@ -154,6 +174,19 @@ public class PteActivity extends AppCompatActivity {
                     else answer = "";
                 }
                 etAnswer.setText(answer);
+                tts.speak(answer, TextToSpeech.QUEUE_FLUSH, null);
+            }
+        });
+
+        btnSpeak.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                if (spinPart.getSelectedItemPosition() == 0) {
+                    promptSpeechInput(questions[fileIdx]);
+                } else {
+                    promptSpeechInput("");
+                }
             }
         });
 
@@ -174,16 +207,31 @@ public class PteActivity extends AppCompatActivity {
         spinCat.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                dataSource = spinCat.getSelectedItem().toString();
-                if (!dataSource.startsWith("TU")) {
-                    audioFiles = Utilities.getFileLine(url + "/" + dataSource + ".audio");
-                } else if (dataSource.startsWith("ATU")) {
-                    audioFiles = Utilities.getFilesFromServer(url + "/" + dataSource, ".mp3,.m4a,.wav", "*.*");
-                } else {
-                    audioFiles = Utilities.getFileLine(url + "/" + dataSource + ".txt");
-                }
-                questions = Utilities.getFileLine(url + "/" + dataSource + ".txt");
-                fileIdx = -1;
+                Thread thread = new Thread() {
+                    @Override
+                    public void run() {
+                        try {
+                            dataSource = spinCat.getSelectedItem().toString();
+                            if (!dataSource.startsWith("TU")) {
+                                audioFiles = Utilities.getFileLine(url + "/" + dataSource + ".audio");
+                            } else if (dataSource.startsWith("ATU")) {
+                                audioFiles = Utilities.getFilesFromServer(url + "/" + dataSource, ".mp3,.m4a,.wav", "*.*");
+                            } else if (spinPart.getSelectedItemPosition() != 0) {
+                                audioFiles = Utilities.getFileLine(url + "/" + dataSource + ".txt");
+                            }
+                            if (spinPart.getSelectedItemPosition() == 0) {
+                                questions = Utilities.getFilesFromServer(url, ".txt", dataSource);
+                            } else {
+                                questions = Utilities.getFileLine(url + "/" + dataSource + ".txt");
+                            }
+                            fileIdx = -1;
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                };
+                thread.start();
             }
 
             @Override
@@ -191,6 +239,8 @@ public class PteActivity extends AppCompatActivity {
 
             }
         });
+
+        this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
     }
 
     private void speakOut() {
@@ -199,7 +249,10 @@ public class PteActivity extends AppCompatActivity {
         if (dataSource.startsWith("TU")) {
             HashMap<String, String> map = new HashMap<String, String>();
             map.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, String.valueOf(fileIdx));
-            tts.speak(audioFiles[fileIdx], TextToSpeech.QUEUE_FLUSH, map);
+            String text = audioFiles[fileIdx];
+            if (url.contains("answershortquestion"))
+                text = audioFiles[fileIdx].split("-")[0].trim();
+            tts.speak(text, TextToSpeech.QUEUE_FLUSH, map);
         } else {
             if (proxy == null) proxy = App.getProxy(this);
             progDailog = ProgressDialog.show(this, "Please wait ...", "Retrieving data ...", true);
@@ -211,7 +264,7 @@ public class PteActivity extends AppCompatActivity {
                         Utilities.playAudio(new MediaPlayer.OnCompletionListener() {
                             @Override
                             public void onCompletion(MediaPlayer mp) {
-                                if (!url.contains("dictation")) promptSpeechInput();
+                                if (!url.contains("dictation")) promptSpeechInput("");
                             }
                         }, new MediaPlayer.OnPreparedListener() {
                             @Override
@@ -251,17 +304,13 @@ public class PteActivity extends AppCompatActivity {
             if (tmp.length > 1) question = tmp[1].trim();
             else question = "";
         }
-        tvResult.setText("Result: " + String.format("%.2f", StringSimilarity.similarity(
+        tvResult.setText("Result: " + String.format("%.1f", StringSimilarity.wordsSimilarity(
                 question.toLowerCase(), etAnswer.getText().toString().toLowerCase())) + "%");
     }
 
     private void updateSpiner(String url) {
-        String[] files = Utilities.getFilesFromServer(url, ".txt,.audio", "*.*");
-        List<String> spinnerArray = new ArrayList<String>();
-        for (int i = 0; i < files.length; i++) {
-            String cat = files[i].substring(files[i].lastIndexOf("/") + 1, files[i].lastIndexOf("."));
-            if (!spinnerArray.contains(cat)) spinnerArray.add(cat);
-        }
+        String[] files = Utilities.getFilesFromServer(url + "/index.php?cat=true", "", "*.*");
+        List<String> spinnerArray = Arrays.asList(files);
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(),
                 android.R.layout.simple_spinner_item, spinnerArray);
 
@@ -270,13 +319,15 @@ public class PteActivity extends AppCompatActivity {
         etAnswer.setText("");
     }
 
-    private void promptSpeechInput() {
+    private void promptSpeechInput(String text) {
         Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
-                RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        intent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, "thksoft.e_helper");
+        intent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 1000);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
-        intent.putExtra(RecognizerIntent.EXTRA_PROMPT,
-                getString(R.string.speech_prompt));
+        if (text.equals(""))
+            intent.putExtra(RecognizerIntent.EXTRA_PROMPT, getString(R.string.speech_prompt));
+        else intent.putExtra(RecognizerIntent.EXTRA_PROMPT, text);
         try {
             startActivityForResult(intent, REQ_CODE_SPEECH_INPUT);
         } catch (ActivityNotFoundException a) {

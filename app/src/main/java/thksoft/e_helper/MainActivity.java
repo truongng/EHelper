@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
         cbSelectAll = findViewById(R.id.checkBox_all);
         cbRepeat = findViewById(R.id.checkBox_repeat);
         cbShowAnswer = findViewById(R.id.cbShowAnswer);
-        cbRandomQ = findViewById(R.id.randomQ);
+        cbRandomQ = findViewById(R.id.chkRandomQ);
         cbRealTest = findViewById(R.id.chkRealTest);
         cbPushAll = findViewById(R.id.chkPushAll);
         tvQuestion = findViewById(R.id.tvQuestion);
@@ -157,6 +157,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 bSelectAll = isChecked;
+                cbRandomQ.setEnabled(isChecked);
             }
         });
 
@@ -297,9 +298,7 @@ public class MainActivity extends AppCompatActivity {
         switch (requestCode) {
             case REQ_CODE_SPEECH_INPUT: {
                 if (resultCode == RESULT_OK && null != data) {
-
-                    ArrayList<String> result = data
-                            .getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+                    ArrayList<String> result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
                     tvAnswer.setText(result.get(0));
                 }
                 break;

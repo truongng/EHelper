@@ -18,6 +18,7 @@ import java.util.Random;
 
 public class Utilities {
     static int curFileIndex = -1;
+    static int lastPercent = 0;
     private static MediaPlayer mediaPlayer;
 
     static String ExtractContent(String str) {
@@ -40,6 +41,17 @@ public class Utilities {
 
     static boolean isNotNullNotEmpty(final String string) {
         return string != null && !string.isEmpty() && !string.trim().isEmpty();
+    }
+
+    static String getWordOnly(String word) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < word.length(); i++) {
+            Character c = word.charAt(i);
+            if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c == '\'') {
+                sb.append(c);
+            }
+        }
+        return sb.toString();
     }
 
     static String getFile(String sPart, Context ctx, boolean choseRandomly) {
@@ -99,17 +111,23 @@ public class Utilities {
     static String[] getFilesFromServer(String dir, String extList, String searchPatern) {
         String[] result = new String[]{};
         try {
-            String respondText = new Downloader().execute(dir + "/index.php?ext=" + extList).get();
+            String url = dir;
+            if (!extList.equals("")) url += "/index.php?ext=" + extList;
+            String respondText = new Downloader().execute(url).get();
             String[] myFiles = respondText.split("\n");
-            List<String> res = new ArrayList<String>();
-            for (int i = 0; i < myFiles.length; i++) {
-                if (searchPatern.equals("*.*") && extList.contains(myFiles[i].substring(myFiles[i].lastIndexOf(".")))) {
-                    res.add(dir + "/" + myFiles[i]);
-                } else if (myFiles[i].contains(searchPatern)) {
-                    res.add(dir + "/" + myFiles[i]);
+            if (!extList.equals("")) {
+                List<String> res = new ArrayList<String>();
+                for (int i = 0; i < myFiles.length; i++) {
+                    if (searchPatern.equals("*.*") && extList.contains(myFiles[i].substring(myFiles[i].lastIndexOf(".")))) {
+                        res.add(dir + "/" + myFiles[i]);
+                    } else if (myFiles[i].contains(searchPatern)) {
+                        res.add(dir + "/" + myFiles[i]);
+                    }
                 }
+                result = res.toArray(new String[res.size()]);
+            } else {
+                return myFiles;
             }
-            result = res.toArray(new String[res.size()]);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -157,9 +175,17 @@ public class Utilities {
     static void playAudio(MediaPlayer.OnCompletionListener ctx, MediaPlayer.OnPreparedListener pre, String url) {
         try {
             killMediaPlayer();
+            lastPercent = 0;
             mediaPlayer = new MediaPlayer();
             mediaPlayer.setOnCompletionListener(ctx);
             mediaPlayer.setOnPreparedListener(pre);
+            mediaPlayer.setOnBufferingUpdateListener(new MediaPlayer.OnBufferingUpdateListener() {
+                @Override
+                public void onBufferingUpdate(MediaPlayer mp, int percent) {
+                    if (percent == lastPercent) mediaPlayer.release();
+                    lastPercent = percent;
+                }
+            });
             mediaPlayer.setDataSource(url);
             mediaPlayer.prepare();
             mediaPlayer.start();
