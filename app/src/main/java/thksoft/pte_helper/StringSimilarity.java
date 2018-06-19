@@ -1,4 +1,4 @@
-package thksoft.e_helper;
+package thksoft.pte_helper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,8 +8,13 @@ import java.util.List;
  */
 
 public class StringSimilarity {
-    public static double wordsSimilarity(String src, String des) {
+    public static float wordsSimilarity(String src, String des) {
         List<String> originWords = new ArrayList<String>();
+        int mesure = 1;
+        if (src.contains("/")) {
+            mesure = src.split("/").length;
+            src = src.replace("/", " ");
+        }
         int correctWords = 0, total = 1;
         try {
             for (String word : src.split(" ")) {
@@ -25,8 +30,9 @@ public class StringSimilarity {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return (double) correctWords * 100 / total;
+        return (float) correctWords * 100 * mesure / total;
     }
+
     public static double similarity(String s1, String s2) {
         String longer = s1, shorter = s2;
         if (s1.length() < s2.length()) { // longer should always have greater length

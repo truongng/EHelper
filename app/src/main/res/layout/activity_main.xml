@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    tools:context="thksoft.e_helper.MainActivity">
+    android:layout_height="match_parent"
+    tools:context="thksoft.pte_helper.MainActivity">
 
     <ScrollView
         android:layout_width="fill_parent"
@@ -11,97 +11,136 @@
 
         <RelativeLayout
             android:id="@+id/form_layout"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <Button
-                android:id="@+id/button_part1"
+            <TextView
+                android:id="@+id/tvPracticeSection"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentTop="true"
-                android:layout_marginStart="24dp"
-                android:layout_marginTop="17dp"
-                android:text="Part 1"
-                tools:layout_editor_absoluteX="147dp"
-                tools:layout_editor_absoluteY="416dp" />
+                android:layout_marginLeft="15dp"
+                android:text="Practice Section: " />
 
-            <Button
-                android:id="@+id/button_part2"
+            <Spinner
+                android:id="@+id/cbPart"
+                style="@style/Widget.AppCompat.Spinner.Underlined"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_above="@+id/chkRealTest"
-                android:layout_centerHorizontal="true"
-                android:text="Part 2" />
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentTop="true"
+                android:layout_alignStart="@+id/button_repeat"
+                android:layout_marginEnd="15dp" />
 
-            <Button
-                android:id="@+id/button_part3"
+            <TextView
+                android:id="@+id/tvPracticeSource"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignBaseline="@+id/button_part2"
-                android:layout_alignBottom="@+id/button_part2"
-                android:layout_alignStart="@+id/button_start"
-                android:text="Part 3" />
+                android:layout_alignLeft="@+id/tvPracticeSection"
+                android:layout_below="@+id/cbPart"
+                android:text="Practice Resource: " />
+
+            <Spinner
+                android:id="@+id/cbCategory"
+                style="@style/Widget.AppCompat.Spinner.Underlined"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignEnd="@+id/cbPart"
+                android:layout_alignStart="@+id/button_repeat"
+                android:layout_below="@+id/cbPart" />
+
+            <Button
+                android:id="@+id/button_showQuestion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignStart="@+id/tvPracticeSection"
+                android:layout_below="@+id/button_check"
+                android:text="Show Q" />
+
+            <Button
+                android:id="@+id/button_showAnswer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignEnd="@+id/etAnswer"
+                android:layout_alignParentBottom="true"
+                android:text="Show A" />
 
             <Button
                 android:id="@+id/button_start"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignStart="@+id/button_next"
-                android:layout_below="@+id/button_part3"
-                android:text="Stop" />
+                android:layout_alignStart="@+id/tvPracticeSection"
+                android:layout_below="@+id/cbCategory"
+                android:text="Start" />
+
+            <Button
+                android:id="@+id/button_repeat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/button_start"
+                android:layout_centerHorizontal="true"
+                android:text="Repeat" />
+
+            <Spinner
+                android:id="@+id/cbQuestionsList"
+                style="@style/Widget.AppCompat.Spinner.Underlined"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignEnd="@+id/cbCategory"
+                android:layout_alignStart="@+id/chkShowQuestion"
+                android:layout_below="@+id/cbCategory" />
+
+            <CheckBox
+                android:id="@+id/chkChoseRandomly"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignStart="@+id/tvPracticeSection"
+                android:layout_below="@+id/button_repeat"
+                android:text="Chose Randomly" />
+
+            <CheckBox
+                android:id="@+id/chkSurfMode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignEnd="@+id/button_repeat"
+                android:layout_below="@+id/button_repeat"
+                android:text="Surf All" />
+
+            <CheckBox
+                android:id="@+id/chkShowQuestion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/button_repeat"
+                android:layout_marginStart="16dp"
+                android:layout_toEndOf="@+id/chkSurfMode"
+                android:text="Show Q" />
 
             <ImageButton
                 android:id="@+id/btnSpeak"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignStart="@+id/chkRandomQ"
-                android:layout_alignTop="@+id/tvAnswerText"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
                 android:background="@null"
-                android:src="@drawable/ic_mic_black_48dp"
-                android:visibility="invisible" />
-
-            <CheckBox
-                android:id="@+id/checkBox_all"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignStart="@+id/button_part1"
-                android:layout_below="@+id/chkRealTest"
-                android:text="Select All" />
-
-            <CheckBox
-                android:id="@+id/cbShowAnswer"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignBaseline="@+id/chkRandomQ"
-                android:layout_alignBottom="@+id/chkRandomQ"
-                android:layout_alignStart="@+id/tvAnswerText"
-                android:text="Show Answer" />
-
-            <CheckBox
-                android:id="@+id/checkBox_repeat"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignStart="@+id/button_part2"
-                android:layout_below="@+id/chkRealTest"
-                android:text="Repeat" />
+                android:src="@drawable/ic_mic_black_48dp" />
 
             <TextView
                 android:id="@+id/tvQuestionText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignStart="@+id/tvQuestion"
-                android:layout_below="@+id/tvQuestion"
+                android:layout_alignStart="@+id/tvPracticeSection"
+                android:layout_below="@+id/chkChoseRandomly"
                 android:layout_marginTop="15dp"
-                android:text="Answer:" />
+                android:text="Question:" />
+
             <TextView
                 android:id="@+id/tvQuestion"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignEnd="@+id/button_start"
-                android:layout_alignStart="@+id/tvAnswerText"
-                android:layout_below="@+id/tvAnswerText"
-                android:layout_margin="0dp"
+                android:layout_alignEnd="@+id/cbPart"
+                android:layout_alignStart="@+id/tvQuestionText"
+                android:layout_below="@+id/tvQuestionText"
                 android:background="@drawable/back"
                 android:inputType="textMultiLine"
                 android:textSize="18sp" />
@@ -110,54 +149,81 @@
                 android:id="@+id/tvAnswerText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignStart="@+id/checkBox_all"
-                android:layout_below="@+id/cbShowAnswer"
-                android:layout_marginTop="16dp"
-                android:text="Question:" />
-            <TextView
-                android:id="@+id/tvAnswer"
+                android:layout_above="@+id/etAnswer"
+                android:layout_alignStart="@+id/tvQuestion"
+                android:text="Answer:" />
+
+            <EditText
+                android:id="@+id/etAnswer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignEnd="@+id/tvQuestion"
-                android:layout_alignStart="@+id/tvQuestionText"
-                android:layout_below="@+id/tvQuestionText"
+                android:layout_alignStart="@+id/tvAnswerText"
+                android:layout_below="@+id/button_todayAchievements"
                 android:background="@drawable/back"
+                android:enabled="false"
                 android:inputType="textMultiLine"
                 android:textSize="18sp" />
 
-            <CheckBox
-                android:id="@+id/chkRandomQ"
+            <TextView
+                android:id="@+id/tvResultText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignBottom="@+id/button_next"
-                android:layout_alignStart="@+id/checkBox_repeat"
-                android:enabled="false"
-                android:text="Random Q" />
-
-            <CheckBox
-                android:id="@+id/chkRealTest"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignStart="@+id/checkBox_repeat"
-                android:layout_below="@+id/button_part1"
-                android:text="TEST" />
+                android:layout_alignStart="@+id/button_repeat"
+                android:layout_below="@+id/etAnswer"
+                android:layout_marginTop="16dp"
+                android:text="Result:"
+                android:textSize="32sp" />
 
             <Button
-                android:id="@+id/button_next"
+                android:id="@+id/button_check"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_below="@+id/button_start"
-                android:layout_marginEnd="20dp"
-                android:text="Next" />
+                android:layout_alignStart="@+id/etAnswer"
+                android:layout_alignTop="@+id/tvResultText"
+                android:text="Check" />
 
             <CheckBox
-                android:id="@+id/chkPushAll"
+                android:id="@+id/chkVisitOnly"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_above="@+id/checkBox_repeat"
-                android:layout_alignStart="@+id/button_part1"
-                android:text="Push All" />
+                android:layout_above="@+id/tvQuestion"
+                android:layout_alignStart="@+id/chkShowQuestion"
+                android:text="Visit Only" />
+
+            <CheckBox
+                android:id="@+id/chkVoices"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/imageView"
+                android:layout_alignEnd="@+id/chkChoseRandomly"
+                android:text="Voices" />
+
+            <Button
+                android:id="@+id/button_todayAchievements"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignEnd="@+id/chkShowQuestion"
+                android:layout_below="@+id/tvQuestion"
+                android:text="View Today's Achievements" />
+
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignEnd="@+id/tvQuestion"
+                android:layout_alignStart="@+id/tvQuestionText"
+                android:layout_below="@+id/tvQuestionText" />
+
+            <CheckBox
+                android:id="@+id/chkAccuracy"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignStart="@+id/chkSurfMode"
+                android:layout_alignTop="@+id/chkVisitOnly"
+                android:text="Accuracy" />
+
         </RelativeLayout>
     </ScrollView>
-</RelativeLayout>
+
+</android.support.constraint.ConstraintLayout>
